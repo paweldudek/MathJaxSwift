@@ -70,6 +70,7 @@ MathJaxSwift implements the following methods to convert [TeX](https://tug.org),
 | `mml2svg`   | MathML                                  | SVG           |
 | `am2chtml`  | AsciiMath                               | cHTML         |
 | `am2mml`    | AsciiMath                               | MathML        |
+| `am2svg`    | AsciiMath                               | SVG           |
 
 #### Initializing and Converting
 
@@ -131,10 +132,10 @@ func myAsyncMethod() async throws {
 ```
 
 ```xml
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <mfrac>
-    <mn>2</mn>
-    <mn>3</mn>
+<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\frac{2}{3}" display="block">
+  <mfrac data-latex="\frac{2}{3}">
+    <mn data-latex="2">2</mn>
+    <mn data-latex="3">3</mn>
   </mfrac>
 </math>
 ```
