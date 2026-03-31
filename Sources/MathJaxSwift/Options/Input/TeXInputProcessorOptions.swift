@@ -114,12 +114,16 @@ import JavaScriptCore
     public static let newcommand = "newcommand"
     public static let noerrors = "noerrors"
     public static let noundefined = "noundefined"
+    public static let physics = "physics"
+    public static let require = "require"
+    public static let setoptions = "setoptions"
     public static let tagformat = "tagformat"
     public static let textcomp = "textcomp"
     public static let textmacros = "textmacros"
     public static let unicode = "unicode"
     public static let upgreek = "upgreek"
     public static let verb = "verb"
+    public static let colorv2 = "colorv2"
     public static let all = [
       action,
       ams,
@@ -134,6 +138,7 @@ import JavaScriptCore
       centernot,
       color,
       colortbl,
+      colorv2,
       configmacros,
       empheq,
       enclose,
@@ -145,6 +150,9 @@ import JavaScriptCore
       newcommand,
       noerrors,
       noundefined,
+      physics,
+      require,
+      setoptions,
       tagformat,
       textcomp,
       textmacros,

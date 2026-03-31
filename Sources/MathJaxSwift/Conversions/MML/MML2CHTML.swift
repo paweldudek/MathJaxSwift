@@ -89,10 +89,10 @@ extension MathJax {
       arguments: [
         css,
         assistiveMml,
-        conversionOptions,
-        documentOptions,
-        inputOptions,
-        outputOptions
+        try conversionOptions.toDictionary(),
+        try documentOptions.toDictionary(),
+        try inputOptions.toDictionary(),
+        try outputOptions.toDictionary()
       ])
   }
   
@@ -158,10 +158,10 @@ extension MathJax {
       arguments: [
         css,
         assistiveMml,
-        conversionOptions,
-        documentOptions,
-        inputOptions,
-        outputOptions
+        try conversionOptions.toDictionary(),
+        try documentOptions.toDictionary(),
+        try inputOptions.toDictionary(),
+        try outputOptions.toDictionary()
       ])
   }
   
@@ -188,17 +188,24 @@ extension MathJax {
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
     error: inout Error?
   ) -> String {
-    return callFunctionAndValidate(
-      .mml2chtml,
-      input: input,
-      arguments: [
+    do {
+      let arguments: [Any] = [
         css,
         assistiveMml,
-        conversionOptions,
-        documentOptions,
-        inputOptions,
-        outputOptions
-      ], error: &error)
+        try conversionOptions.toDictionary(),
+        try documentOptions.toDictionary(),
+        try inputOptions.toDictionary(),
+        try outputOptions.toDictionary()
+      ]
+      return callFunctionAndValidate(
+        .mml2chtml,
+        input: input,
+        arguments: arguments,
+        error: &error)
+    } catch let e {
+      error = e
+      return ""
+    }
   }
   
 }

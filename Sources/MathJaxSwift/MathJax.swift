@@ -35,13 +35,13 @@ public final class MathJax {
   public struct Metadata: Codable {
     
     /// The version of the module.
-    let version: String
+    public let version: String
     
     /// The URL of the module.
-    let resolved: URL?
+    public let resolved: URL?
     
     /// The module's SHA-512.
-    let integrity: String?
+    public let integrity: String?
   }
   
   /// An output format.
@@ -70,10 +70,10 @@ public final class MathJax {
   public struct Response {
     
     /// The response's value.
-    let value: String
+    public let value: String
     
     /// The response's error, if any.
-    let error: Error?
+    public let error: Error?
   }
   
   // MARK: Private/internal properties
@@ -113,6 +113,7 @@ public final class MathJax {
     try registerClasses([
       CHTMLOutputProcessorOptions.self,
       SVGOutputProcessorOptions.self,
+      LinebreakOptions.self,
       TeXInputProcessorOptions.self,
       MMLInputProcessorOptions.self,
       AMInputProcessorOptions.self,
@@ -366,9 +367,10 @@ extension MathJax {
         return
       }
       
+      nonisolated(unsafe) let capturedSelf = self
       queue.async {
         do {
-          continuation.resume(returning: try block(self))
+          continuation.resume(returning: try block(capturedSelf))
         }
         catch {
           continuation.resume(throwing: error)

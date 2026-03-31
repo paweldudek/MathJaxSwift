@@ -41,6 +41,7 @@ import JavaScriptCore
   var exFactor: Double { get set }
   var displayAlign: String { get set }
   var displayIndent: Double { get set }
+  var linebreaks: LinebreakOptions { get set }
   var localID: String? { get set }
   var titleID: Int { get set }
 }
@@ -94,6 +95,7 @@ import JavaScriptCore
     exFactor: Double = defaultExFactor,
     displayAlign: String = defaultDisplayAlign,
     displayIndent: Double = defaultDisplayIndent,
+    linebreaks: LinebreakOptions = defaultLinebreaks,
     localID: String? = defaultLocalID,
     titleID: Int = defaultTitleID
   ) {
@@ -113,7 +115,8 @@ import JavaScriptCore
       skipAttributes: skipAttributes,
       exFactor: exFactor,
       displayAlign: displayAlign,
-      displayIndent: displayIndent
+      displayIndent: displayIndent,
+      linebreaks: linebreaks
     )
   }
   

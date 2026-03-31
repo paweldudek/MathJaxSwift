@@ -48,7 +48,10 @@ internal enum Function: String {
   
   /// AsciiMath to MathML.
   case am2mml
-  
+
+  /// AsciiMath to SVG.
+  case am2svg
+
   // MARK: Properties
   
   /// The function's JavaScript module name.
@@ -58,11 +61,11 @@ internal enum Function: String {
       return Constants.Names.JSModules.chtml
     case .tex2mml, .am2mml:
       return Constants.Names.JSModules.mml
-    case .tex2svg, .mml2svg:
+    case .tex2svg, .mml2svg, .am2svg:
       return Constants.Names.JSModules.svg
     }
   }
-  
+
   /// The function's JavaScript class name.
   var className: String {
     switch self {
@@ -70,7 +73,7 @@ internal enum Function: String {
       return Constants.Names.Classes.chtmlConverter
     case .tex2mml, .am2mml:
       return Constants.Names.Classes.mmlConverter
-    case .tex2svg, .mml2svg:
+    case .tex2svg, .mml2svg, .am2svg:
       return Constants.Names.Classes.svgConverter
     }
   }
@@ -89,11 +92,11 @@ internal enum Function: String {
       return .chtml
     case .tex2mml, .am2mml:
       return .mml
-    case .tex2svg, .mml2svg:
+    case .tex2svg, .mml2svg, .am2svg:
       return .svg
     }
   }
-  
+
   /// The output parser to use with this function.
   var outputParser: Parser {
     switch self {
@@ -101,7 +104,7 @@ internal enum Function: String {
       return HTMLParser.shared
     case .tex2mml, .am2mml:
       return MMLParser.shared
-    case .tex2svg, .mml2svg:
+    case .tex2svg, .mml2svg, .am2svg:
       return SVGParser.shared
     }
   }
