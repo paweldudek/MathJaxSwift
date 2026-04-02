@@ -52,8 +52,11 @@ internal enum Function: String {
   /// AsciiMath to SVG.
   case am2svg
 
+  /// MathML to speech.
+  case toSpeech
+
   // MARK: Properties
-  
+
   /// The function's JavaScript module name.
   var jsModuleName: String {
     switch self {
@@ -63,6 +66,8 @@ internal enum Function: String {
       return Constants.Names.JSModules.mml
     case .tex2svg, .mml2svg, .am2svg:
       return Constants.Names.JSModules.svg
+    case .toSpeech:
+      return Constants.Names.JSModules.speech
     }
   }
 
@@ -75,6 +80,8 @@ internal enum Function: String {
       return Constants.Names.Classes.mmlConverter
     case .tex2svg, .mml2svg, .am2svg:
       return Constants.Names.Classes.svgConverter
+    case .toSpeech:
+      return Constants.Names.Classes.speechConverter
     }
   }
   
@@ -94,6 +101,8 @@ internal enum Function: String {
       return .mml
     case .tex2svg, .mml2svg, .am2svg:
       return .svg
+    case .toSpeech:
+      return .speech
     }
   }
 
@@ -106,6 +115,8 @@ internal enum Function: String {
       return MMLParser.shared
     case .tex2svg, .mml2svg, .am2svg:
       return SVGParser.shared
+    case .toSpeech:
+      return SpeechParser.shared
     }
   }
   

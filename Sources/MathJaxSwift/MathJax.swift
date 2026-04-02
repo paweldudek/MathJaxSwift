@@ -45,7 +45,7 @@ public final class MathJax {
   }
   
   /// An output format.
-  public enum OutputFormat: CaseIterable {
+  public enum OutputFormat {
     
     /// The CommonHTML output format.
     case chtml
@@ -55,13 +55,17 @@ public final class MathJax {
     
     /// The SVG output format.
     case svg
-    
+
+    /// The speech output format.
+    case speech
+
     /// The format's bundle URL.
     internal var url: URL? {
       switch self {
-      case .chtml: return Constants.URLs.chtmlBundle
-      case .mml:   return Constants.URLs.mmlBundle
-      case .svg:   return Constants.URLs.svgBundle
+      case .chtml:  return Constants.URLs.chtmlBundle
+      case .mml:    return Constants.URLs.mmlBundle
+      case .svg:    return Constants.URLs.svgBundle
+      case .speech: return Constants.URLs.speechBundle
       }
     }
   }
@@ -89,7 +93,7 @@ public final class MathJax {
   /// Initializes a new `MathJax` instance.
   ///
   /// - Parameter outputFormats: The preferred output formats.
-  public init(preferredOutputFormats: [OutputFormat] = OutputFormat.allCases) throws {
+  public init(preferredOutputFormats: [OutputFormat] = [.chtml, .mml, .svg]) throws {
     // Make sure we're using the correct MathJax version
     let metadata = try MathJax.metadata()
     guard metadata.version == Constants.expectedMathJaxVersion else {
@@ -200,14 +204,41 @@ extension MathJax {
     
     // Evaluate the JavaScript
     context.evaluateScript(fileContents, withSourceURL: url)
-    
+
     // Check for js errors
     try checkForJSException()
-    
+
+    // The speech bundle uses SRE which initializes asynchronously via Promises.
+    // JSContext processes microtasks between evaluateScript calls, so we flush
+    // the microtask queue by evaluating empty scripts until SRE reports ready.
+    if outputFormat == .speech {
+      try waitForSpeechReady()
+    }
+
     // Save the supported format
     supportedOutputFormats.append(outputFormat)
   }
   
+  /// Verifies that the Speech Rule Engine initialized successfully.
+  private func waitForSpeechReady() throws {
+    let ready = context.evaluateScript(
+      "\(Constants.Names.JSModules.speech).\(Constants.Names.Classes.speechConverter).isReady()"
+    )
+    if ready?.toBool() == true {
+      return
+    }
+
+    // Check for initialization error
+    let error = context.evaluateScript(
+      "\(Constants.Names.JSModules.speech).\(Constants.Names.Classes.speechConverter).getError()"
+    )
+    if let errorMsg = error?.toString(), errorMsg != "null" && errorMsg != "undefined" {
+      throw MathJaxError.javascriptException(value: "SRE init failed: \(errorMsg)")
+    }
+
+    throw MathJaxError.javascriptException(value: "SRE initialization did not complete")
+  }
+
   /// Registers the class types with the context and checks for an exception.
   ///
   /// - Parameter classes: The array of classes.
