@@ -19,6 +19,7 @@
     - [Batch Converting](#batch-converting)
     - [Threading](#threading)
     - [Preferred Output Formats](#preferred-output-formats)
+  - [Speech Conversion](#🗣️-speech-conversion)
   - [Options](#⚙️-options)
     - [Document Options](#document-options)
     - [Conversion Options](#conversion-options)
@@ -34,7 +35,7 @@
 Add the dependency to your package manifest file.
 
 ```swift
-.package(url: "https://github.com/colinc86/MathJaxSwift", from: "3.4.0")
+.package(url: "https://github.com/colinc86/MathJaxSwift", from: "3.5.0")
 ```
 
 ## 🎛️ Usage
@@ -59,18 +60,21 @@ catch {
 
 ### 🧰 Available Methods
 
-MathJaxSwift implements the following methods to convert [TeX](https://tug.org), [MathML](https://www.w3.org/TR/MathML/), and [AsciiMath](http://asciimath.org) to CommonHTML, MathML and SVG data.
+MathJaxSwift implements the following methods to convert [TeX](https://tug.org), [MathML](https://www.w3.org/TR/MathML/), and [AsciiMath](http://asciimath.org) to CommonHTML, MathML, SVG, and speech text.
 
-| Method      | Input Format                            | Output Format |
-| :---------- | :-------------------------------------- | :------------ |
-| `tex2chtml` | TeX                                     | cHTML         |
-| `tex2mml`   | TeX                                     | MathML        |
-| `tex2svg`   | TeX                                     | SVG           |
-| `mml2chtml` | MathML                                  | cHTML         |
-| `mml2svg`   | MathML                                  | SVG           |
-| `am2chtml`  | AsciiMath                               | cHTML         |
-| `am2mml`    | AsciiMath                               | MathML        |
-| `am2svg`    | AsciiMath                               | SVG           |
+| Method        | Input Format                            | Output Format |
+| :------------ | :-------------------------------------- | :------------ |
+| `tex2chtml`   | TeX                                     | cHTML         |
+| `tex2mml`     | TeX                                     | MathML        |
+| `tex2svg`     | TeX                                     | SVG           |
+| `tex2speech`  | TeX                                     | Speech text   |
+| `mml2chtml`   | MathML                                  | cHTML         |
+| `mml2svg`     | MathML                                  | SVG           |
+| `mml2speech`  | MathML                                  | Speech text   |
+| `am2chtml`    | AsciiMath                               | cHTML         |
+| `am2mml`      | AsciiMath                               | MathML        |
+| `am2svg`      | AsciiMath                               | SVG           |
+| `am2speech`   | AsciiMath                               | Speech text   |
 
 #### Initializing and Converting
 
@@ -132,10 +136,10 @@ func myAsyncMethod() async throws {
 ```
 
 ```xml
-<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\frac{2}{3}" display="block">
-  <mfrac data-latex="\frac{2}{3}">
-    <mn data-latex="2">2</mn>
-    <mn data-latex="3">3</mn>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mfrac>
+    <mn>2</mn>
+    <mn>3</mn>
   </mfrac>
 </math>
 ```
@@ -156,6 +160,9 @@ MathJaxSwift loads all of the necessary JavaScript in to its context to run all 
 do {
   // Save some time and don't load the SVG output format.
   let mathjax = try MathJax(preferredOutputFormats: [.chtml, .mml])
+  
+  // Or load speech support along with MML (needed for tex2speech/am2speech).
+  let speechJax = try MathJax(preferredOutputFormats: [.mml, .speech])
 }
 catch {
   print("Error initializing MathJax: \(error)")
@@ -180,6 +187,34 @@ catch {
 ```
 
 See the [Notes](https://github.com/colinc86/MathJaxSwift#notes) section for more details.
+
+### 🗣️ Speech Conversion
+
+MathJaxSwift can convert math expressions to spoken text using the [Speech Rule Engine](https://speechruleengine.org) (SRE). This is useful for accessibility and text-to-speech applications.
+
+```swift
+do {
+  let mathjax = try MathJax(preferredOutputFormats: [.mml, .speech])
+  
+  let speech = try mathjax.tex2speech("\\frac{2}{3}")
+  print(speech) // "two thirds"
+  
+  let speech2 = try mathjax.tex2speech("x^2 + y^2 = z^2")
+  print(speech2) // "x squared plus y squared equals z squared"
+}
+catch {
+  print("Error: \(error)")
+}
+```
+
+Speech conversion works by first converting the input to MathML, then passing it through SRE. You can also convert MathML directly:
+
+```swift
+let mml = try mathjax.tex2mml("\\sqrt{2}")
+let speech = try mathjax.mml2speech(mml) // "StartRoot 2 EndRoot"
+```
+
+> **Note:** The speech output format must be included in `preferredOutputFormats` (or it will be loaded lazily on first use). The `.mml` format is also required since speech conversion uses MathML as an intermediate step for TeX and AsciiMath input.
 
 ### ⚙️ Options
 
@@ -306,6 +341,6 @@ Please refer to the official [MathJax Documentation](https://docs.mathjax.org/en
 
 To get around the limitations of the `JSContext` class, the package uses [Webpack](https://webpack.js.org) to create bundle files that can be evaluated by the context. The wrapper methods, MathJax, and Webpack dependencies are bundled together in an npm module called `mjn`. 
 
-`mjn`'s main entry point is `index.js` which exposes the converter classes and functions that utilize MathJax. The files are packed with Webpack and placed in to the `mjn/dist/` directory. `chtml.bundle.js`, `mml.bundle.js`, and `svg.bundle.js` files are loaded by the Swift package's module and evaluated by a JavaScript context to expose the functions.
+`mjn`'s main entry point is `index.js` which exposes the converter classes and functions that utilize MathJax. The files are packed with Webpack and placed in to the `mjn/dist/` directory. `chtml.bundle.js`, `mml.bundle.js`, and `svg.bundle.js` files are loaded by the Swift package's module and evaluated by a JavaScript context to expose the functions. The `speech.bundle.js` file is built separately via `node build-speech.js` and bundles the [Speech Rule Engine](https://speechruleengine.org) with xmldom polyfills for headless JSContext operation.
 
-After making modifications to `index.js`, it should be rebuilt with `npm run build` executed in the `mjn` directory which will recreate the bundle files.
+After making modifications to the converters, rebuild with `npm run build` executed in the `mjn` directory for the main bundles, and `node build-speech.js` for the speech bundle.
