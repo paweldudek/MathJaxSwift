@@ -12,6 +12,8 @@ const {TeX} = require('mathjax-full/js/input/tex.js');
 
 const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
 
+const {loadDynamicFonts} = require('./dynamicFonts.js');
+
 const CSS = [
   'svg a{fill:blue;stroke:blue}',
   '[data-mml-node="merror"]>g{fill:red;stroke:red}',
@@ -117,8 +119,10 @@ export class SVGConverter {
     
     if (assistiveMml) AssistiveMmlHandler(handler);
     documentOptions.InputJax = inputJax;
-    documentOptions.OutputJax = new SVG(svgOptions);
-    
+    const outputJax = new SVG(svgOptions);
+    loadDynamicFonts(outputJax);
+    documentOptions.OutputJax = outputJax;
+
     const html = mathjax.document('', documentOptions);
     const node = html.convert(input || '', conversionOptions);
     

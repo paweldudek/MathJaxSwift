@@ -12,6 +12,8 @@ const {TeX} = require('mathjax-full/js/input/tex.js');
 
 const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
 
+const {loadDynamicFonts} = require('./dynamicFonts.js');
+
 /**
  * Converts TeX, MathML, and AsciiMath input to CommonHTML.
  */
@@ -99,8 +101,10 @@ export class CommonHTMLConverter {
     
     if (assistiveMml) AssistiveMmlHandler(handler);
     documentOptions.InputJax = inputJax;
-    documentOptions.OutputJax = new CHTML(chtmlOptions);
-    
+    const outputJax = new CHTML(chtmlOptions);
+    loadDynamicFonts(outputJax);
+    documentOptions.OutputJax = outputJax;
+
     const html = mathjax.document('', documentOptions);
     const node = html.convert(input || '', conversionOptions);
     
