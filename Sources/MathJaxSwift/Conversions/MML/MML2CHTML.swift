@@ -50,7 +50,7 @@ extension MathJax {
     queue: DispatchQueue = .global()
   ) async throws -> [Response] {
     return try await perform(on: queue) { mathjax in
-      try self.mml2chtml(
+      try mathjax.mml2chtml(
         input,
         css: css,
         assistiveMml: assistiveMml,
@@ -61,7 +61,7 @@ extension MathJax {
       )
     }
   }
-  
+
   /// Converts MathML input strings to CHTML.
   ///
   /// - Parameters:
@@ -70,7 +70,6 @@ extension MathJax {
   ///   - assistiveMml: Whether the include assistive MathML output.
   ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
-  ///   - containerOptions: The CHTML container options.
   ///   - inputOptions: The MathML input processor options.
   ///   - outputOptions: The CHTML output processor options.
   /// - Returns: CHTML formatted output.
@@ -119,7 +118,7 @@ extension MathJax {
     queue: DispatchQueue = .global()
   ) async throws -> String {
     return try await perform(on: queue) { mathjax in
-      try self.mml2chtml(
+      try mathjax.mml2chtml(
         input,
         css: css,
         assistiveMml: assistiveMml,
@@ -130,7 +129,7 @@ extension MathJax {
       )
     }
   }
-  
+
   /// Converts a MathML input string to CHTML.
   ///
   /// - Parameters:
@@ -139,7 +138,6 @@ extension MathJax {
   ///   - assistiveMml: Whether the include assistive MathML output.
   ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
-  ///   - containerOptions: The CHTML container options.
   ///   - inputOptions: The MathML input processor options.
   ///   - outputOptions: The CHTML output processor options.
   /// - Returns: CHTML formatted output.
@@ -173,7 +171,6 @@ extension MathJax {
   ///   - assistiveMml: Whether the include assistive MathML output.
   ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
-  ///   - containerOptions: The CHTML container options.
   ///   - inputOptions: The MathML input processor options.
   ///   - outputOptions: The CHTML output processor options.
   ///   - error: The error produced by the conversion.

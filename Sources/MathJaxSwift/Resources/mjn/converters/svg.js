@@ -127,7 +127,7 @@ export class SVGConverter {
     const node = html.convert(input || '', conversionOptions);
     
     if (css) {
-      return adaptor.textContent(svg.styleSheet(html));
+      return adaptor.textContent(outputJax.styleSheet(html));
     } else {
       let html = (container ? adaptor.outerHTML(node) : adaptor.innerHTML(node));
       return styles ? html.replace(/<defs>/, `<defs><style>${CSS}</style>`) : html;

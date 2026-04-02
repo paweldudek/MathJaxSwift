@@ -109,7 +109,7 @@ export class CommonHTMLConverter {
     const node = html.convert(input || '', conversionOptions);
     
     if (css) {
-      return adaptor.textContent(chtml.styleSheet(html));
+      return adaptor.textContent(outputJax.styleSheet(html));
     } else {
       return adaptor.outerHTML(node);
     }

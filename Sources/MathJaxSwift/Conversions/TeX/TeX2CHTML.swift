@@ -62,7 +62,7 @@ extension MathJax {
     }
   }
   
-  /// Converts TeX input stringß to CHTML.
+  /// Converts TeX input strings to CHTML.
   ///
   /// - Parameters:
   ///   - input: The input strings containing TeX.
