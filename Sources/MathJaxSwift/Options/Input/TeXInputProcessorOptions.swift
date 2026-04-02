@@ -92,6 +92,7 @@ import JavaScriptCore
   public struct Packages {
     public static let action = "action"
     public static let ams = "ams"
+    public static let autoload = "autoload"
     public static let amscd = "amscd"
     public static let base = "base"
     public static let bbox = "bbox"
@@ -128,6 +129,7 @@ import JavaScriptCore
       action,
       ams,
       amscd,
+      autoload,
       base,
       bbox,
       boldsymbol,
