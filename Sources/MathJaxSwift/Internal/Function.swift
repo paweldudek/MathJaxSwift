@@ -48,9 +48,15 @@ internal enum Function: String {
   
   /// AsciiMath to MathML.
   case am2mml
-  
+
+  /// AsciiMath to SVG.
+  case am2svg
+
+  /// MathML to speech.
+  case toSpeech
+
   // MARK: Properties
-  
+
   /// The function's JavaScript module name.
   var jsModuleName: String {
     switch self {
@@ -58,11 +64,13 @@ internal enum Function: String {
       return Constants.Names.JSModules.chtml
     case .tex2mml, .am2mml:
       return Constants.Names.JSModules.mml
-    case .tex2svg, .mml2svg:
+    case .tex2svg, .mml2svg, .am2svg:
       return Constants.Names.JSModules.svg
+    case .toSpeech:
+      return Constants.Names.JSModules.speech
     }
   }
-  
+
   /// The function's JavaScript class name.
   var className: String {
     switch self {
@@ -70,8 +78,10 @@ internal enum Function: String {
       return Constants.Names.Classes.chtmlConverter
     case .tex2mml, .am2mml:
       return Constants.Names.Classes.mmlConverter
-    case .tex2svg, .mml2svg:
+    case .tex2svg, .mml2svg, .am2svg:
       return Constants.Names.Classes.svgConverter
+    case .toSpeech:
+      return Constants.Names.Classes.speechConverter
     }
   }
   
@@ -89,11 +99,13 @@ internal enum Function: String {
       return .chtml
     case .tex2mml, .am2mml:
       return .mml
-    case .tex2svg, .mml2svg:
+    case .tex2svg, .mml2svg, .am2svg:
       return .svg
+    case .toSpeech:
+      return .speech
     }
   }
-  
+
   /// The output parser to use with this function.
   var outputParser: Parser {
     switch self {
@@ -101,8 +113,10 @@ internal enum Function: String {
       return HTMLParser.shared
     case .tex2mml, .am2mml:
       return MMLParser.shared
-    case .tex2svg, .mml2svg:
+    case .tex2svg, .mml2svg, .am2svg:
       return SVGParser.shared
+    case .toSpeech:
+      return SpeechParser.shared
     }
   }
   

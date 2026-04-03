@@ -62,10 +62,10 @@ extension MathJax {
           assistiveMml,
           container,
           styles,
-          conversionOptions,
-          documentOptions,
-          inputOptions,
-          outputOptions
+          try conversionOptions.toDictionary(),
+          try documentOptions.toDictionary(),
+          try inputOptions.toDictionary(),
+          try outputOptions.toDictionary()
         ])
     }
   }
@@ -102,13 +102,13 @@ extension MathJax {
         assistiveMml,
         container,
         styles,
-        conversionOptions,
-        documentOptions,
-        inputOptions,
-        outputOptions
+        try conversionOptions.toDictionary(),
+        try documentOptions.toDictionary(),
+        try inputOptions.toDictionary(),
+        try outputOptions.toDictionary()
       ])
   }
-  
+
   /// Converts a TeX input string to SVG.
   ///
   /// - Parameters:
@@ -149,7 +149,7 @@ extension MathJax {
       )
     }
   }
-  
+
   /// Converts a TeX input string to SVG.
   ///
   /// - Parameters:
@@ -182,13 +182,13 @@ extension MathJax {
         assistiveMml,
         container,
         styles,
-        conversionOptions,
-        documentOptions,
-        inputOptions,
-        outputOptions
+        try conversionOptions.toDictionary(),
+        try documentOptions.toDictionary(),
+        try inputOptions.toDictionary(),
+        try outputOptions.toDictionary()
       ])
   }
-  
+
   /// Converts a TeX input string to SVG.
   ///
   /// - Parameters:
@@ -215,19 +215,26 @@ extension MathJax {
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions(),
     error: inout Error?
   ) -> String {
-    return callFunctionAndValidate(
-      .tex2svg,
-      input: input,
-      arguments: [
+    do {
+      let arguments: [Any] = [
         css,
         assistiveMml,
         container,
         styles,
-        conversionOptions,
-        documentOptions,
-        inputOptions,
-        outputOptions
-      ], error: &error)
+        try conversionOptions.toDictionary(),
+        try documentOptions.toDictionary(),
+        try inputOptions.toDictionary(),
+        try outputOptions.toDictionary()
+      ]
+      return callFunctionAndValidate(
+        .tex2svg,
+        input: input,
+        arguments: arguments,
+        error: &error)
+    } catch let e {
+      error = e
+      return ""
+    }
   }
   
 }
