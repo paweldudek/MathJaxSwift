@@ -50,7 +50,8 @@ import Foundation
   public static let defaultExFactor: Double = 0.5
   public static let defaultDisplayAlign: DisplayAlignment = DisplayAlignments.center
   public static let defaultDisplayIndent: Double = 0
-  
+  public static let defaultLinebreaks: LinebreakOptions = LinebreakOptions()
+
   // MARK: Properties
   
   @objc dynamic public var scale: Double
@@ -65,9 +66,10 @@ import Foundation
   @objc dynamic public var exFactor: Double
   @objc dynamic public var displayAlign: DisplayAlignment
   @objc dynamic public var displayIndent: Double
-  
+  @objc dynamic public var linebreaks: LinebreakOptions
+
   // MARK: Initializers
-  
+
   init(
     scale: Double = defaultScale,
     minScale: Double = defaultMinScale,
@@ -80,7 +82,8 @@ import Foundation
     skipAttributes: [String: Bool] = defaultSkipAttributes,
     exFactor: Double = defaultExFactor,
     displayAlign: DisplayAlignment = defaultDisplayAlign,
-    displayIndent: Double = defaultDisplayIndent
+    displayIndent: Double = defaultDisplayIndent,
+    linebreaks: LinebreakOptions = defaultLinebreaks
   ) {
     self.scale = scale
     self.minScale = minScale
@@ -94,6 +97,7 @@ import Foundation
     self.exFactor = exFactor
     self.displayAlign = displayAlign
     self.displayIndent = displayIndent
+    self.linebreaks = linebreaks
   }
-  
+
 }

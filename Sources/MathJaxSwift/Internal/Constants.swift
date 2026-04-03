@@ -46,24 +46,29 @@ internal struct Constants {
     }
     
     struct JSModules {
-      
+
       static let chtml = "chtml"
-      
+
       static let mml = "mml"
-      
+
       static let svg = "svg"
+
+      static let speech = "speech"
     }
-    
+
     struct Classes {
-      
+
       /// The name of the CommonHTML converter.
       static let chtmlConverter = "CommonHTMLConverter"
-      
+
       /// The name of the MathML converter.
       static let mmlConverter = "MathMLConverter"
-      
+
       /// The name of the SVG converter.
       static let svgConverter = "SVGConverter"
+
+      /// The name of the speech converter.
+      static let speechConverter = "SpeechConverter"
     }
     
   }
@@ -78,6 +83,9 @@ internal struct Constants {
     
     /// The path to the svg.js bundle.
     static let svgBundleFile = "dist/svg.bundle.js"
+
+    /// The path to the speech.js bundle.
+    static let speechBundleFile = "dist/speech.bundle.js"
     
     /// The path to the mjn package-lock.json file.
     static let packageLockFile = "package-lock.json"
@@ -97,6 +105,9 @@ internal struct Constants {
     
     /// The URL of the svg bundle file.
     static let svgBundle = mjn?.appendingPathComponent(Paths.svgBundleFile)
+
+    /// The URL of the speech bundle file.
+    static let speechBundle = mjn?.appendingPathComponent(Paths.speechBundleFile)
     
     /// The URL of the mjn package-lock.json file.
     static let packageLock = mjn?.appendingPathComponent(Paths.packageLockFile)

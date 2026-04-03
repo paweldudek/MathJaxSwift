@@ -42,6 +42,7 @@ import JavaScriptCore
   var exFactor: Double { get set }
   var displayAlign: String { get set }
   var displayIndent: Double { get set }
+  var linebreaks: LinebreakOptions { get set }
 }
 
 @objc public class CHTMLOutputProcessorOptions: OutputProcessorOptions, CHTMLOutputProcessorOptionsJSExports {
@@ -83,7 +84,8 @@ import JavaScriptCore
     skipAttributes: [String: Bool] = defaultSkipAttributes,
     exFactor: Double = defaultExFactor,
     displayAlign: String = defaultDisplayAlign,
-    displayIndent: Double = defaultDisplayIndent
+    displayIndent: Double = defaultDisplayIndent,
+    linebreaks: LinebreakOptions = defaultLinebreaks
   ) {
     self.matchFontHeight = matchFontHeight
     self.fontURL = fontURL
@@ -100,7 +102,8 @@ import JavaScriptCore
       skipAttributes: skipAttributes,
       exFactor: exFactor,
       displayAlign: displayAlign,
-      displayIndent: displayIndent
+      displayIndent: displayIndent,
+      linebreaks: linebreaks
     )
   }
   

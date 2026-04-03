@@ -1,5 +1,5 @@
 //
-//  TeX2CHTML.swift
+//  AM2SVG.swift
 //  MathJaxSwift
 //
 //  Copyright (c) 2023 Colin Campbell
@@ -26,34 +26,40 @@
 import Foundation
 
 extension MathJax {
-  
-  /// Converts TeX input strings to CHTML.
+
+  /// Converts ASCIIMath input strings to SVG.
   ///
   /// - Parameters:
-  ///   - input: The input strings containing TeX.
+  ///   - input: The input strings containing ASCIIMath.
   ///   - css: Whether the document's CSS should be output.
   ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - container: Whether the document's outer HTML should be returned.
+  ///   - styles: Whether CSS styles should be included. (Default is `true`.)
   ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
-  ///   - inputOptions: The TeX input processor options.
-  ///   - outputOptions: The CHTML output processor options.
+  ///   - inputOptions: The ASCIIMath input processor options.
+  ///   - outputOptions: The SVG output processor options.
   ///   - queue: The queue to execute the conversion on.
-  /// - Returns: CHTML formatted output.
-  public func tex2chtml(
+  /// - Returns: SVG formatted output.
+  public func am2svg(
     _ input: [String],
     css: Bool = false,
     assistiveMml: Bool = false,
+    container: Bool = false,
+    styles: Bool = true,
     conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
-    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
-    outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
+    inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
+    outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> [Response] {
     return try await perform(on: queue) { mathjax in
-      try mathjax.tex2chtml(
+      try mathjax.am2svg(
         input,
         css: css,
         assistiveMml: assistiveMml,
+        container: container,
+        styles: styles,
         conversionOptions: conversionOptions,
         documentOptions: documentOptions,
         inputOptions: inputOptions,
@@ -61,67 +67,79 @@ extension MathJax {
       )
     }
   }
-  
-  /// Converts TeX input strings to CHTML.
+
+  /// Converts ASCIIMath input strings to SVG.
   ///
   /// - Parameters:
-  ///   - input: The input strings containing TeX.
+  ///   - input: The input strings containing ASCIIMath.
   ///   - css: Whether the document's CSS should be output.
   ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - container: Whether the document's outer HTML should be returned.
+  ///   - styles: Whether CSS styles should be included.
   ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
-  ///   - inputOptions: The TeX input processor options.
-  ///   - outputOptions: The CHTML output processor options.
-  /// - Returns: CHTML formatted output.
-  public func tex2chtml(
+  ///   - inputOptions: The ASCIIMath input processor options.
+  ///   - outputOptions: The SVG output processor options.
+  /// - Returns: SVG formatted output.
+  public func am2svg(
     _ input: [String],
     css: Bool = false,
     assistiveMml: Bool = false,
+    container: Bool = false,
+    styles: Bool = true,
     conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
-    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
-    outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions()
+    inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
+    outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions()
   ) throws -> [Response] {
     return try callFunctionAndValidate(
-      .tex2chtml,
+      .am2svg,
       input: input,
       arguments: [
         css,
         assistiveMml,
+        container,
+        styles,
         try conversionOptions.toDictionary(),
         try documentOptions.toDictionary(),
         try inputOptions.toDictionary(),
         try outputOptions.toDictionary()
       ])
   }
-  
-  /// Converts a TeX input string to CHTML.
+
+  /// Converts an ASCIIMath input string to SVG.
   ///
   /// - Parameters:
-  ///   - input: The input string containing TeX.
+  ///   - input: The input string containing ASCIIMath.
   ///   - css: Whether the document's CSS should be output.
   ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - container: Whether the document's outer HTML should be returned.
+  ///   - styles: Whether CSS styles should be included. (Default is `true`.)
   ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
-  ///   - inputOptions: The TeX input processor options.
-  ///   - outputOptions: The CHTML output processor options.
+  ///   - inputOptions: The ASCIIMath input processor options.
+  ///   - outputOptions: The SVG output processor options.
   ///   - queue: The queue to execute the conversion on.
-  /// - Returns: CHTML formatted output.
-  public func tex2chtml(
+  /// - Returns: SVG formatted output.
+  public func am2svg(
     _ input: String,
     css: Bool = false,
     assistiveMml: Bool = false,
+    container: Bool = false,
+    styles: Bool = true,
     conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
-    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
-    outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
+    inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
+    outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
     return try await perform(on: queue) { mathjax in
-      try mathjax.tex2chtml(
+      try mathjax.am2svg(
         input,
         css: css,
         assistiveMml: assistiveMml,
+        container: container,
+        styles: styles,
         conversionOptions: conversionOptions,
         documentOptions: documentOptions,
         inputOptions: inputOptions,
@@ -129,73 +147,85 @@ extension MathJax {
       )
     }
   }
-  
-  /// Converts a TeX input string to CHTML.
+
+  /// Converts an ASCIIMath input string to SVG.
   ///
   /// - Parameters:
-  ///   - input: The input string containing TeX.
+  ///   - input: The input string containing ASCIIMath.
   ///   - css: Whether the document's CSS should be output.
   ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - container: Whether the document's outer HTML should be returned.
+  ///   - styles: Whether CSS styles should be included.
   ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
-  ///   - inputOptions: The TeX input processor options.
-  ///   - outputOptions: The CHTML output processor options.
-  /// - Returns: CHTML formatted output.
-  public func tex2chtml(
+  ///   - inputOptions: The ASCIIMath input processor options.
+  ///   - outputOptions: The SVG output processor options.
+  /// - Returns: SVG formatted output.
+  public func am2svg(
     _ input: String,
     css: Bool = false,
     assistiveMml: Bool = false,
+    container: Bool = false,
+    styles: Bool = true,
     conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
-    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
-    outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions()
+    inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
+    outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions()
   ) throws -> String {
     return try callFunctionAndValidate(
-      .tex2chtml,
+      .am2svg,
       input: input,
       arguments: [
         css,
         assistiveMml,
+        container,
+        styles,
         try conversionOptions.toDictionary(),
         try documentOptions.toDictionary(),
         try inputOptions.toDictionary(),
         try outputOptions.toDictionary()
       ])
   }
-  
-  /// Converts a TeX input string to CHTML.
+
+  /// Converts an ASCIIMath input string to SVG.
   ///
   /// - Parameters:
-  ///   - input: The input string containing TeX.
+  ///   - input: The input string containing ASCIIMath.
   ///   - css: Whether the document's CSS should be output.
   ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - container: Whether the document's outer HTML should be returned.
+  ///   - styles: Whether CSS styles should be included.
   ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
-  ///   - inputOptions: The TeX input processor options.
-  ///   - outputOptions: The CHTML output processor options.
+  ///   - inputOptions: The ASCIIMath input processor options.
+  ///   - outputOptions: The SVG output processor options.
   ///   - error: The error produced by the conversion.
-  /// - Returns: CHTML formatted output.
-  public func tex2chtml(
+  /// - Returns: SVG formatted output.
+  public func am2svg(
     _ input: String,
     css: Bool = false,
     assistiveMml: Bool = false,
+    container: Bool = false,
+    styles: Bool = true,
     conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
-    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
-    outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
+    inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
+    outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions(),
     error: inout Error?
   ) -> String {
     do {
       let arguments: [Any] = [
         css,
         assistiveMml,
+        container,
+        styles,
         try conversionOptions.toDictionary(),
         try documentOptions.toDictionary(),
         try inputOptions.toDictionary(),
         try outputOptions.toDictionary()
       ]
       return callFunctionAndValidate(
-        .tex2chtml,
+        .am2svg,
         input: input,
         arguments: arguments,
         error: &error)
@@ -204,5 +234,5 @@ extension MathJax {
       return ""
     }
   }
-  
+
 }

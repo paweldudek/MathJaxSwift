@@ -30,57 +30,65 @@ import JavaScriptCore
   var fixphi: Bool { get set }
   var displaystyle: Bool { get set }
   var decimalsign: String { get set }
+  var delimiters: [[String]] { get set }
 }
 
 @objc public class AMInputProcessorOptions: InputProcessorOptions, AMInputProcessorOptionsJSExports {
-  
+
   // MARK: Types
-  
+
   internal enum CodingKeys: CodingKey {
     case fixphi
     case displaystyle
     case decimalsign
+    case delimiters
   }
-  
+
   // MARK: Default values
-  
+
   public static let defaultFixphi: Bool = true
   public static let defaultDisplaystyle: Bool = true
   public static let defaultDecimalsign: String = "."
-  
+  public static let defaultDelimiters: [[String]] = [["`", "`"]]
+
   // MARK: Properties
-  
+
   dynamic public var fixphi: Bool
   dynamic public var displaystyle: Bool
   dynamic public var decimalsign: String
-  
+  dynamic public var delimiters: [[String]]
+
   // MARK: Initializers
-  
+
   public init(
     fixphi: Bool = defaultFixphi,
     displaystyle: Bool = defaultDisplaystyle,
-    decimalsign: String = defaultDecimalsign
+    decimalsign: String = defaultDecimalsign,
+    delimiters: [[String]] = defaultDelimiters
   ) {
     self.fixphi = fixphi
     self.displaystyle = displaystyle
     self.decimalsign = decimalsign
+    self.delimiters = delimiters
     super.init()
   }
-  
+
   public required init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     fixphi = try container.decode(Bool.self, forKey: .fixphi)
     displaystyle = try container.decode(Bool.self, forKey: .displaystyle)
     decimalsign = try container.decode(String.self, forKey: .decimalsign)
+    delimiters = try container.decode([[String]].self, forKey: .delimiters)
     try super.init(from: decoder)
   }
-  
+
   public override func encode(to encoder: Encoder) throws {
     try super.encode(to: encoder)
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(fixphi, forKey: .fixphi)
     try container.encode(displaystyle, forKey: .displaystyle)
     try container.encode(decimalsign, forKey: .decimalsign)
+    try container.encode(delimiters, forKey: .delimiters)
   }
-  
+
 }

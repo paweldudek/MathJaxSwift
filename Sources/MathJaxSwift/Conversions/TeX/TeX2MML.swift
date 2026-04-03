@@ -71,9 +71,9 @@ extension MathJax {
       .tex2mml,
       input: input,
       arguments: [
-        conversionOptions,
-        documentOptions,
-        inputOptions
+        try conversionOptions.toDictionary(),
+        try documentOptions.toDictionary(),
+        try inputOptions.toDictionary()
       ])
   }
   
@@ -121,9 +121,9 @@ extension MathJax {
       .tex2mml,
       input: input,
       arguments: [
-        conversionOptions,
-        documentOptions,
-        inputOptions
+        try conversionOptions.toDictionary(),
+        try documentOptions.toDictionary(),
+        try inputOptions.toDictionary()
       ])
   }
   
@@ -143,14 +143,21 @@ extension MathJax {
     inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
     error: inout Error?
   ) -> String {
-    return callFunctionAndValidate(
-      .tex2mml,
-      input: input,
-      arguments: [
-        conversionOptions,
-        documentOptions,
-        inputOptions
-      ], error: &error)
+    do {
+      let arguments: [Any] = [
+        try conversionOptions.toDictionary(),
+        try documentOptions.toDictionary(),
+        try inputOptions.toDictionary()
+      ]
+      return callFunctionAndValidate(
+        .tex2mml,
+        input: input,
+        arguments: arguments,
+        error: &error)
+    } catch let e {
+      error = e
+      return ""
+    }
   }
   
 }

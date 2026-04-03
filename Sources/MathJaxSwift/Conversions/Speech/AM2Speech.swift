@@ -1,5 +1,5 @@
 //
-//  AM2MML.swift
+//  AM2Speech.swift
 //  MathJaxSwift
 //
 //  Copyright (c) 2023 Colin Campbell
@@ -26,17 +26,20 @@
 import Foundation
 
 extension MathJax {
-  
-  /// Converts ASCIIMath input strings to MathML.
+
+  /// Converts AsciiMath input strings to speech text.
+  ///
+  /// Internally converts AsciiMath to MathML, then passes the MathML through
+  /// SRE to produce speech text.
   ///
   /// - Parameters:
-  ///   - input: The input strings containing ASCIIMath.
+  ///   - input: The input strings containing AsciiMath.
   ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
-  ///   - inputOptions: The ASCIIMath input processor options.
+  ///   - inputOptions: The AsciiMath input processor options.
   ///   - queue: The queue to execute the conversion on.
-  /// - Returns: MathML formatted output.
-  public func am2mml(
+  /// - Returns: Speech text output.
+  public func am2speech(
     _ input: [String],
     conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
@@ -44,7 +47,7 @@ extension MathJax {
     queue: DispatchQueue = .global()
   ) async throws -> [Response] {
     return try await perform(on: queue) { mathjax in
-      try mathjax.am2mml(
+      try mathjax.am2speech(
         input,
         conversionOptions: conversionOptions,
         documentOptions: documentOptions,
@@ -52,41 +55,41 @@ extension MathJax {
       )
     }
   }
-  
-  /// Converts ASCIIMath input strings to MathML.
+
+  /// Converts AsciiMath input strings to speech text.
   ///
   /// - Parameters:
-  ///   - input: The input strings containing ASCIIMath.
+  ///   - input: The input strings containing AsciiMath.
   ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
-  ///   - inputOptions: The ASCIIMath input processor options.
-  /// - Returns: MathML formatted output.
-  public func am2mml(
+  ///   - inputOptions: The AsciiMath input processor options.
+  /// - Returns: Speech text output.
+  public func am2speech(
     _ input: [String],
     conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: AMInputProcessorOptions = AMInputProcessorOptions()
   ) throws -> [Response] {
-    return try callFunctionAndValidate(
-      .am2mml,
-      input: input,
-      arguments: [
-        try conversionOptions.toDictionary(),
-        try documentOptions.toDictionary(),
-        try inputOptions.toDictionary()
-      ])
+    let mmlResponses = try am2mml(
+      input,
+      conversionOptions: conversionOptions,
+      documentOptions: documentOptions,
+      inputOptions: inputOptions
+    )
+    let mmlStrings = mmlResponses.map { $0.value }
+    return try mml2speech(mmlStrings)
   }
-  
-  /// Converts an ASCIIMath input string to MathML.
+
+  /// Converts an AsciiMath input string to speech text.
   ///
   /// - Parameters:
-  ///   - input: The input string containing ASCIIMath.
+  ///   - input: The input string containing AsciiMath.
   ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
-  ///   - inputOptions: The ASCIIMath input processor options.
+  ///   - inputOptions: The AsciiMath input processor options.
   ///   - queue: The queue to execute the conversion on.
-  /// - Returns: MathML formatted output.
-  public func am2mml(
+  /// - Returns: Speech text output.
+  public func am2speech(
     _ input: String,
     conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
@@ -94,7 +97,7 @@ extension MathJax {
     queue: DispatchQueue = .global()
   ) async throws -> String {
     return try await perform(on: queue) { mathjax in
-      try mathjax.am2mml(
+      try mathjax.am2speech(
         input,
         conversionOptions: conversionOptions,
         documentOptions: documentOptions,
@@ -102,62 +105,28 @@ extension MathJax {
       )
     }
   }
-  
-  /// Converts an ASCIIMath input string to MathML.
+
+  /// Converts an AsciiMath input string to speech text.
   ///
   /// - Parameters:
-  ///   - input: The input string containing ASCIIMath.
+  ///   - input: The input string containing AsciiMath.
   ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
-  ///   - inputOptions: The ASCIIMath input processor options.
-  /// - Returns: MathML formatted output.
-  public func am2mml(
+  ///   - inputOptions: The AsciiMath input processor options.
+  /// - Returns: Speech text output.
+  public func am2speech(
     _ input: String,
     conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: AMInputProcessorOptions = AMInputProcessorOptions()
   ) throws -> String {
-    return try callFunctionAndValidate(
-      .am2mml,
-      input: input,
-      arguments: [
-        try conversionOptions.toDictionary(),
-        try documentOptions.toDictionary(),
-        try inputOptions.toDictionary()
-      ])
+    let mml = try am2mml(
+      input,
+      conversionOptions: conversionOptions,
+      documentOptions: documentOptions,
+      inputOptions: inputOptions
+    )
+    return try mml2speech(mml)
   }
-  
-  /// Converts an ASCIIMath input string to MathML.
-  ///
-  /// - Parameters:
-  ///   - input: The input string containing ASCIIMath.
-  ///   - conversionOptions: The MathJax conversion options.
-  ///   - documentOptions: The math document options.
-  ///   - inputOptions: The ASCIIMath input processor options.
-  ///   - error: The error produced by the conversion.
-  /// - Returns: MathML formatted output.
-  public func am2mml(
-    _ input: String,
-    conversionOptions: ConversionOptions = ConversionOptions(),
-    documentOptions: DocumentOptions = DocumentOptions(),
-    inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
-    error: inout Error?
-  ) -> String {
-    do {
-      let arguments: [Any] = [
-        try conversionOptions.toDictionary(),
-        try documentOptions.toDictionary(),
-        try inputOptions.toDictionary()
-      ]
-      return callFunctionAndValidate(
-        .am2mml,
-        input: input,
-        arguments: arguments,
-        error: &error)
-    } catch let e {
-      error = e
-      return ""
-    }
-  }
-  
+
 }
