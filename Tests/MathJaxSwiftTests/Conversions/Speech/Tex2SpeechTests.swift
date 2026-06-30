@@ -44,6 +44,25 @@ final class Tex2SpeechTests: XCTestCase {
     XCTAssertEqual(output, "x squared plus y squared equals z squared")
   }
 
+  func testTex2SpeechUsesSRELocale() throws {
+    let testCases = [
+      ("en", "two thirds"),
+      ("de", "zwei drittel"),
+      ("fr", "deux-tiers"),
+      ("es", "empezar fracci\u{00f3}n 2 entre 3 finalizar fracci\u{00f3}n"),
+      ("en", "two thirds")
+    ]
+
+    for (locale, expectedOutput) in testCases {
+      let options = DocumentOptions()
+      options.sre.locale = locale
+
+      let output = try mathjax.tex2speech("\\frac{2}{3}", documentOptions: options)
+
+      XCTAssertEqual(output, expectedOutput)
+    }
+  }
+
   func testTex2SpeechTime() {
     measure {
       let output = try? mathjax.tex2speech(MathJaxSwiftTests.texInput)

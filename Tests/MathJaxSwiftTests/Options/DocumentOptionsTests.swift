@@ -61,4 +61,13 @@ final class DocumentOptionsTests: XCTestCase {
     XCTAssertEqual(decoded.safeOptions.allowOptions.URLs, AllowOptions.Allows.none)
   }
 
+  func testDocumentOptionsDefaultSubObjectsAreIndependent() {
+    let customOptions = DocumentOptions()
+    customOptions.sre.locale = "de"
+
+    let defaultOptions = DocumentOptions()
+
+    XCTAssertEqual(defaultOptions.sre.locale, SREOptions.defaultLocale)
+  }
+
 }

@@ -109,10 +109,10 @@ import JavaScriptCore
   public static let defaultEnableExplorer: Bool = true
   public static let defaultEnableAssistiveMml: Bool = false
   public static let defaultEnableMenu: Bool = true
-  public static let defaultA11Y: A11YOptions = A11YOptions()
-  public static let defaultSREOptions: SREOptions = SREOptions()
-  public static let defaultMenuOptions: MenuOptions = MenuOptions()
-  public static let defaultSafeOptions: SafeOptions = SafeOptions()
+  public static var defaultA11Y: A11YOptions { A11YOptions() }
+  public static var defaultSREOptions: SREOptions { SREOptions() }
+  public static var defaultMenuOptions: MenuOptions { MenuOptions() }
+  public static var defaultSafeOptions: SafeOptions { SafeOptions() }
   public static let defaultEnrichError: ErrorFunction? = nil
   public static let defaultCompileError: ErrorFunction? = nil
   public static let defaultTypesetError: ErrorFunction? = nil

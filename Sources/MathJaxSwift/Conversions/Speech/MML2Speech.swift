@@ -31,14 +31,16 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input strings containing MathML.
+  ///   - documentOptions: The math document options.
   ///   - queue: The queue to execute the conversion on.
   /// - Returns: Speech text output.
   public func mml2speech(
     _ input: [String],
+    documentOptions: DocumentOptions = DocumentOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> [Response] {
     return try await perform(on: queue) { mathjax in
-      try mathjax.mml2speech(input)
+      try mathjax.mml2speech(input, documentOptions: documentOptions)
     }
   }
 
@@ -46,10 +48,13 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input strings containing MathML.
+  ///   - documentOptions: The math document options.
   /// - Returns: Speech text output.
   public func mml2speech(
-    _ input: [String]
+    _ input: [String],
+    documentOptions: DocumentOptions = DocumentOptions()
   ) throws -> [Response] {
+    try configureSpeech(with: documentOptions.sre)
     return try callFunctionAndValidate(
       .toSpeech,
       input: input,
@@ -60,14 +65,16 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input string containing MathML.
+  ///   - documentOptions: The math document options.
   ///   - queue: The queue to execute the conversion on.
   /// - Returns: Speech text output.
   public func mml2speech(
     _ input: String,
+    documentOptions: DocumentOptions = DocumentOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
     return try await perform(on: queue) { mathjax in
-      try mathjax.mml2speech(input)
+      try mathjax.mml2speech(input, documentOptions: documentOptions)
     }
   }
 
@@ -75,10 +82,13 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input string containing MathML.
+  ///   - documentOptions: The math document options.
   /// - Returns: Speech text output.
   public func mml2speech(
-    _ input: String
+    _ input: String,
+    documentOptions: DocumentOptions = DocumentOptions()
   ) throws -> String {
+    try configureSpeech(with: documentOptions.sre)
     return try callFunctionAndValidate(
       .toSpeech,
       input: input,

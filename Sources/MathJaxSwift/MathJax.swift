@@ -385,6 +385,33 @@ extension MathJax {
     // Capture the output
     return arrayValue
   }
+
+  /// Configures the speech-rule-engine before speech conversion.
+  ///
+  /// The speech bundle initializes SRE with English defaults. Speech conversion
+  /// options are not part of MathJax's TeX/MathML conversion output, so they
+  /// need to be applied directly to SRE before calling `toSpeech`.
+  internal func configureSpeech(with options: SREOptions) throws {
+    if !supportedOutputFormats.contains(.speech) {
+      try loadBundle(with: .speech)
+    }
+
+    guard let module = context.objectForKeyedSubscript(Constants.Names.JSModules.speech) else {
+      throw MathJaxError.missingModule
+    }
+
+    guard let converter = module.objectForKeyedSubscript(Constants.Names.Classes.speechConverter) else {
+      throw MathJaxError.missingClass
+    }
+
+    guard let configure = converter.objectForKeyedSubscript("configure") else {
+      throw MathJaxError.missingFunction(name: "configure")
+    }
+
+    configure.call(withArguments: [options.locale, options.domain, options.style])
+    try checkForJSException()
+    try waitForSpeechReady()
+  }
   
   /// Performs the throwing closure asynchronously.
   ///

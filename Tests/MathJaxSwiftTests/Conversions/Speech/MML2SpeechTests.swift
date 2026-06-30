@@ -39,6 +39,16 @@ final class MML2SpeechTests: XCTestCase {
     XCTAssertTrue(output.lowercased().contains("root") || output.lowercased().contains("square"))
   }
 
+  func testMML2SpeechUsesSRELocale() throws {
+    let mml = try mathjax.tex2mml(MathJaxSwiftTests.texInput)
+    let options = DocumentOptions()
+    options.sre.locale = "de"
+
+    let output = try mathjax.mml2speech(mml, documentOptions: options)
+
+    XCTAssertEqual(output, "zwei drittel")
+  }
+
   func testMML2SpeechTime() {
     let mml = try! mathjax.tex2mml(MathJaxSwiftTests.texInput)
     measure {
